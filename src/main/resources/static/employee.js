@@ -4,6 +4,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const errorDiv = document.getElementById('error');
     const ageCategorySelect = document.getElementById('ageCategory');
     const professionalCategorySelect = document.getElementById('professionalCategory');
+    const saveButton = document.getElementById('saveSimulationBtn');
+    const saveSuccessDiv = document.getElementById('saveSuccess');
+
+    // Variables pour stocker la dernière simulation
+    let lastSimulationRequest = null;
+    let lastSimulationResponse = null;
 
     // Charger les catégories au démarrage
     loadCategories();
@@ -11,6 +17,10 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
         await calculateLoan();
+    });
+
+    saveButton.addEventListener('click', async function() {
+        await saveSimulation();
     });
 
     async function loadCategories() {
@@ -87,6 +97,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const result = await response.json();
+            // Sauvegarder pour utilisation ultérieure
+            lastSimulationRequest = loanRequest;
+            lastSimulationResponse = result;
             displayEmployeeResult(result, loanRequest);
         } catch (error) {
             showError('Une erreur est survenue lors du calcul. Veuillez réessayer.');
@@ -157,6 +170,10 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('totalInterest').textContent = formatCurrency(result.totalInterest);
         document.getElementById('totalCost').textContent = formatCurrency(result.totalCost);
 
+        // Afficher le bouton de sauvegarde
+        saveButton.style.display = 'inline-block';
+        saveSuccessDiv.style.display = 'none';
+
         resultDiv.style.display = 'block';
         resultDiv.scrollIntoView({ behavior: 'smooth' });
     }
@@ -212,9 +229,71 @@ document.addEventListener('DOMContentLoaded', function() {
         errorDiv.scrollIntoView({ behavior: 'smooth' });
     }
 
+    async function saveSimulation() {
+        if (!lastSimulationRequest || !lastSimulationResponse) {
+            showError('Aucune simulation à sauvegarder. Veuillez d\'abord calculer un prêt.');
+            return;
+        }
+
+        setSaveLoading(true);
+        saveSuccessDiv.style.display = 'none';
+        errorDiv.style.display = 'none';
+
+        try {
+            const saveRequest = {
+                loanRequest: lastSimulationRequest,
+                loanResponse: lastSimulationResponse
+            };
+
+            const response = await fetch('/api/save-simulation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(saveRequest)
+            });
+
+            if (!response.ok) {
+                if (response.status === 400) {
+                    throw new Error('Données insuffisantes pour sauvegarder la simulation');
+                }
+                throw new Error('Erreur lors de la sauvegarde');
+            }
+
+            const result = await response.json();
+            showSaveSuccess();
+            console.log('Simulation saved with ID:', result.id);
+        } catch (error) {
+            showError('Erreur lors de la sauvegarde: ' + error.message);
+            console.error('Save error:', error);
+        } finally {
+            setSaveLoading(false);
+        }
+    }
+
+    function setSaveLoading(isLoading) {
+        const saveText = document.getElementById('saveText');
+        const savingText = document.getElementById('savingText');
+
+        saveButton.disabled = isLoading;
+        saveText.style.display = isLoading ? 'none' : 'inline';
+        savingText.style.display = isLoading ? 'inline' : 'none';
+    }
+
+    function showSaveSuccess() {
+        saveSuccessDiv.style.display = 'block';
+        saveButton.style.display = 'none';
+        setTimeout(() => {
+            saveSuccessDiv.style.display = 'none';
+            saveButton.style.display = 'inline-block';
+        }, 3000);
+    }
+
     function hideMessages() {
         resultDiv.style.display = 'none';
         errorDiv.style.display = 'none';
+        saveSuccessDiv.style.display = 'none';
+        saveButton.style.display = 'none';
     }
 
     function formatCurrency(amount) {

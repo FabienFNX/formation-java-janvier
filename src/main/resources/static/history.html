@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique des Simulations - Espace Employé</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="history.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Historique des Simulations</h1>
+        <div class="subtitle">Gestion des dossiers de simulation de prêts</div>
+
+        <!-- Filtres et recherche -->
+        <div class="filters-section">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="searchClient">Rechercher un client:</label>
+                    <input type="text" id="searchClient" placeholder="Nom ou prénom du client...">
+                </div>
+                <div class="filter-group">
+                    <label for="filterAge">Catégorie d'âge:</label>
+                    <select id="filterAge">
+                        <option value="">-- Toutes --</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filterProfession">Catégorie professionnelle:</label>
+                    <select id="filterProfession">
+                        <option value="">-- Toutes --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button id="searchBtn" class="search-btn">🔍 Rechercher</button>
+                <button id="clearBtn" class="clear-btn">🗑️ Effacer</button>
+                <button id="refreshBtn" class="refresh-btn">🔄 Actualiser</button>
+            </div>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="stats-section">
+            <div class="stat-item">
+                <span class="stat-label">Total des simulations:</span>
+                <span id="totalCount" class="stat-value">-</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Affichées:</span>
+                <span id="displayedCount" class="stat-value">-</span>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="loading" class="loading" style="display: none;">
+            ⏳ Chargement des simulations...
+        </div>
+
+        <!-- Table des simulations -->
+        <div class="table-container">
+            <table id="simulationsTable" class="simulations-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Client</th>
+                        <th>Date</th>
+                        <th>Montant</th>
+                        <th>Durée</th>
+                        <th>Taux</th>
+                        <th>Mensualité</th>
+                        <th>Profil</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="simulationsBody">
+                    <!-- Les simulations seront ajoutées ici -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Message si aucune simulation -->
+        <div id="noSimulations" class="no-data" style="display: none;">
+            📝 Aucune simulation trouvée.
+            <br>
+            <a href="employee.html" class="link">Créer une nouvelle simulation</a>
+        </div>
+
+        <!-- Messages d'erreur -->
+        <div id="error" class="error-message" style="display: none;"></div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <a href="employee.html" class="nav-link">⬅️ Retour à la simulation</a>
+            <a href="/" class="nav-link">🏠 Accueil</a>
+        </div>
+    </div>
+
+    <!-- Modal pour les détails -->
+    <div id="detailModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Détails de la simulation</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Contenu dynamique -->
+            </div>
+            <div class="modal-footer">
+                <button id="deleteBtn" class="delete-btn">🗑️ Supprimer</button>
+                <button id="closeModalBtn" class="close-btn">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="history.js"></script>
+</body>
+</html>

@@ -144,3 +144,9 @@ L'exercice est ici d'implémenter la logique présente dans le backend et d'appe
 Réalisez les tests unitaires associés au backend Java en dépassant 80% de couverture de tests.
 
 Utilisez les instructions/rules pour rédiger ces tests
+
+## Hands-on #4
+
+L'employé d'agence doit également pouvoir sauvegarder les éléments en base de données afin de pouvoir consulter la liste des dossiers de simulation de prêts qu'il a effectué. 
+
+Pour cela vous pouvez vous appuyer sur le fichier de base de données SQL Lite *loan_simulator.db* et l'exemple de script SQL pour insérer les données *sample_data.sql*

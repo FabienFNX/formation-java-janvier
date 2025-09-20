@@ -110,6 +110,17 @@
                     <span id="totalCost" class="value"></span>
                 </div>
             </div>
+
+            <!-- Boutons d'action -->
+            <div class="action-buttons">
+                <button id="saveSimulationBtn" class="save-btn" style="display: none;">
+                    <span id="saveText">💾 Sauvegarder cette simulation</span>
+                    <span id="savingText" style="display: none;">⏳ Sauvegarde en cours...</span>
+                </button>
+                <div id="saveSuccess" class="success-message" style="display: none;">
+                    ✅ Simulation sauvegardée avec succès !
+                </div>
+            </div>
         </div>
 
         <div id="error" class="error-message" style="display: none;"></div>
@@ -117,6 +128,7 @@
         <!-- Navigation -->
         <div class="navigation">
             <a href="/" class="nav-link">🏠 Retour à l'accueil</a>
+            <a href="history.html" class="nav-link">📋 Historique des simulations</a>
         </div>
     </div>
 
